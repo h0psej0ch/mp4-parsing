@@ -1,10 +1,15 @@
-pub mod mp4_box;
+mod boxes;
 mod utils;
+mod header;
 
 use std::error::Error;
 use std::fs;
-use mp4_box::FileType;
-use mp4_box::BoxHeader;
+
+use boxes::ftyp::FileType;
+use boxes::moov::MoovBox;
+
+use header::BoxHeader;
+use header::Header;
 
 fn main() -> Result<(), Box<dyn Error>> {
 
@@ -13,6 +18,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut headers: Vec<BoxHeader> = Vec::new();
 
     let mut ftyp: Option<FileType> = None;
+    let mut moov: Option<MoovBox> = None;
 
     let mut index = 0;
     'big: while index < data.len() {
@@ -27,11 +33,13 @@ fn main() -> Result<(), Box<dyn Error>> {
     }
 
     headers.into_iter().for_each(|header| {
-        // println!("{:10} | {:10}", header.size, header.name);
         match header.name.as_str() {
             "ftyp" => {
-                ftyp = Some(FileType::new(header, &data, 8).unwrap());
+                ftyp = Some(FileType::new(header, &data).unwrap());
             },
+            "moov" => {
+                moov = MoovBox::new(header, &data)
+            }
             _ => {
                 println!("Unknown type")
             }
