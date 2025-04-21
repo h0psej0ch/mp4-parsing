@@ -1,3 +1,12 @@
+pub fn to_16bit_int(data: &Vec<u8>, index: usize) -> u16 {
+    if index + 1 >= data.len() {
+        0
+    } else {
+        (data[index] as u16) << 8 |
+            (data[index + 1] as u16)
+    }
+}
+
 pub fn to_32bit_int(data: &Vec<u8>, index: usize) -> u32 {
     if index + 3 >= data.len() {
         0

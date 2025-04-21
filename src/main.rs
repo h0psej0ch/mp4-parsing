@@ -13,7 +13,7 @@ use header::Header;
 
 fn main() -> Result<(), Box<dyn Error>> {
 
-    let data: Vec<u8> = fs::read("example.mp4")?;
+    let data: Vec<u8> = fs::read("video.mp4")?;
 
     let mut headers: Vec<BoxHeader> = Vec::new();
 
